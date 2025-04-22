@@ -1,15 +1,15 @@
-package NCT.com.Booking.DTO.Reponse;
+package NCT.com.Booking.DTO.Response;
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiReponse <T>{
+@Builder
+public class ApiResponse<T>{
     private int code ;
     private String mess ;
     private T result ;

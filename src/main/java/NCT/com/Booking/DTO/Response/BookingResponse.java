@@ -1,18 +1,19 @@
-package NCT.com.Booking.DTO.Reponse;
+package NCT.com.Booking.DTO.Response;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingReponse {
+public class BookingResponse {
+
     private String seatNumner ;
     private LocalDateTime bookingTime  ;
     private boolean status ;

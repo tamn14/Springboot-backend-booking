@@ -49,5 +49,14 @@ public class Flights {
 
     )
     private List<Booking> bookings = new ArrayList<>();
+    // Synchronizes data
+    public void addBooking(Booking booking) {
+        this.bookings.add(booking) ;
+        booking.setFlights(this);
+    }
 
+    public void deleteBooking(Booking booking) {
+        this.bookings.remove(booking) ;
+        booking.setFlights(null);
+    }
 }

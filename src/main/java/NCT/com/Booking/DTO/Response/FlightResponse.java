@@ -1,4 +1,4 @@
-package NCT.com.Booking.DTO.Reponse;
+package NCT.com.Booking.DTO.Response;
 
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FlightReponse {
+public class FlightResponse {
     private String fromLocation ;
     private String toLocation ;
     private LocalDateTime departureTime;

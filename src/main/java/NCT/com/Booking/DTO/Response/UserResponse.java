@@ -1,18 +1,17 @@
-package NCT.com.Booking.DTO.Reponse;
+package NCT.com.Booking.DTO.Response;
 
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserReponse {
+public class UserResponse {
     private String userName ;
     private String passWord ;
     private String lastName ;

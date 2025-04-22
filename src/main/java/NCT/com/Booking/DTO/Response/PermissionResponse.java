@@ -1,4 +1,4 @@
-package NCT.com.Booking.DTO.Reponse;
+package NCT.com.Booking.DTO.Response;
 
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PermissionReponse {
+public class PermissionResponse {
 
     private String name ;
     private List<Integer> roles ;
