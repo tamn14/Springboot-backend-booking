@@ -1,16 +1,14 @@
 package NCT.com.Booking.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Users {
@@ -54,7 +52,7 @@ public class Users {
     // Synchronizes data
     public void addRole(Roles role) {
         this.roles.add(role) ;
-        role.getUsers().add(this) ;
+        role.getUsers().add(this);
     }
 
     public void deleteRole(Roles role) {

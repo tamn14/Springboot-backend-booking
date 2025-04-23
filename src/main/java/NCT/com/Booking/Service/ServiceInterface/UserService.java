@@ -6,11 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface UserService {
-    public UserResponse addFlight(UserRequest userRequest) ;
-    public UserResponse updateFlight(UserRequest userRequest) ;
-    public void deleteFlight(int id) ;
+    public UserResponse addUsers(UserRequest userRequest) ;
+    public UserResponse updateUsers(UserRequest userRequest , int id) ;
+    public void deleteUsers(int id) ;
     public List<UserResponse> findAll() ;
     public UserResponse findFlightById(int id) ;
 

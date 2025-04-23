@@ -8,15 +8,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingResponse {
-
+    private int id ;
     private String seatNumner ;
     private LocalDateTime bookingTime  ;
     private boolean status ;
-    private int users  ;
-    private int flights ;
+    private Integer users  ;
+    private Integer flights ;
 }

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface PermissionService {
     public PermissionResponse addFlight(Permission permission) ;
     public PermissionResponse updateFlight(Permission permission) ;

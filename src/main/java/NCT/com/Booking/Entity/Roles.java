@@ -1,18 +1,18 @@
 package NCT.com.Booking.Entity;
 
+import NCT.com.Booking.DTO.Response.PermissionResponse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Setter @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Roles")
+@Data
+@Table(name = "roles")
 public class Roles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,16 +48,17 @@ public class Roles {
     )
     private List<Permission> permissions = new ArrayList<>() ;
 
-
     // Synchronizes data
     public void addPermission(Permission permission) {
         this.permissions.add(permission) ;
-        permission.getRoles().add(this) ;
+        permission.getRoles().add(this);
     }
 
     public void deletePermission(Permission permission) {
         this.permissions.remove(permission) ;
-        permission.getRoles().remove(this) ;
+        permission.getRoles().remove(this);
     }
+
+
 
 }

@@ -1,10 +1,7 @@
 package NCT.com.Booking.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.userdetails.User;
+import lombok.*;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -12,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
