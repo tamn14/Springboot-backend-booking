@@ -1,16 +1,15 @@
 package NCT.com.Booking.Service.ServiceInterface;
 
 import NCT.com.Booking.DTO.Response.RoleResponse;
-import NCT.com.Booking.DTO.Request.RoleRequest;
-import org.springframework.stereotype.Service;
+import NCT.com.Booking.DTO.Request.RolesRequest;
 
 import java.util.List;
 
 public interface RoleService {
-    public RoleResponse addFlight(RoleRequest roleRequest) ;
-    public RoleResponse updateFlight(RoleRequest roleRequest) ;
-    public void deleteFlight(int id) ;
+    public RoleResponse addRoles(RolesRequest roleRequest) ;
+    public RoleResponse updateRoles(RolesRequest roleRequest) ;
+    public void deleteRoles(int id) ;
     public List<RoleResponse> findAll() ;
-    public RoleResponse findFlightById(int id) ;
+    public RoleResponse findroleById(int id) ;
 
 }

@@ -1,40 +1,59 @@
 package NCT.com.Booking.Mapper;
 
-import NCT.com.Booking.DTO.Request.FlightRequest;
-import NCT.com.Booking.DTO.Request.UserRequest;
+import NCT.com.Booking.DTO.Request.BookingCreateRequest;
+
+import NCT.com.Booking.DTO.Request.FlightCreateRequest;
+import NCT.com.Booking.DTO.Response.BookingResponse;
 import NCT.com.Booking.DTO.Response.FlightResponse;
-import NCT.com.Booking.DTO.Response.UserResponse;
 import NCT.com.Booking.Entity.Booking;
 import NCT.com.Booking.Entity.Flights;
 import NCT.com.Booking.Entity.Users;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
+import NCT.com.Booking.Repository.FlightRepo;
+import NCT.com.Booking.Repository.UserRepo;
+import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface FlightsMapper {
-    @Mapping(source = "bookings", target = "bookings", qualifiedByName = "mapBookingIdsToBookings")
-    Flights toFlight(FlightRequest request);
-    @Mapping(source = "bookings", target = "bookings", qualifiedByName = "mapBookingsToBookingIds")
-    FlightResponse toFlightResponse(Flights flights);
+@Component
+public class FlightsMapper {
+    private FlightRepo flightRepo ;
 
-    @Named("mapBookingIdsToBookings")
-    default List<Booking> mapBookingIdsToBookings(List<Integer> ids) {
-        if (ids == null) return null;
-        return ids.stream().map(id -> {
-            Booking booking = new Booking();
-            booking.setId(id);
-            return booking;
-        }).collect(Collectors.toList());
+    public Flights toEntityCreate(FlightCreateRequest request) {
+        Flights flights = new Flights() ;
+        flights.setId(request.getId());
+        flights.setFlightNumber(request.getFlightNumber());
+        flights.setAirline(request.getAirline());
+        flights.setPrice(request.getPrice());
+        flights.setArrivalTime(request.getArrivalTime());
+        flights.setDepartureTime(request.getDepartureTime());
+        flights.setAvailableSeats(request.getAvailableSeats());
+        flights.setFromLocation(request.getFromLocation());
+        flights.setToLocation(request.getToLocation());
+        return flights ;
     }
-    @Named("mapBookingsToBookingIds")
-    default List<Integer> mapBookingsToBookingIds(List<Booking> bookings) {
-        if (bookings == null) return null;
-        return bookings.stream().map(Booking::getId).collect(Collectors.toList());
+
+    public FlightResponse toDTO(Flights flights) {
+        FlightResponse flightResponse = new FlightResponse( );
+        flightResponse.setId(flights.getId());
+        flightResponse.setAirline(flights.getAirline());
+        flightResponse.setDepartureTime(flights.getDepartureTime());
+        flightResponse.setFromLocation(flights.getFromLocation());
+        flightResponse.setAvailableSeats(flights.getAvailableSeats());
+        flightResponse.setPrice(flights.getPrice());
+        flightResponse.setToLocation(flights.getToLocation());
+        flightResponse.setArrivalTime(flights.getArrivalTime());
+
+        List<Integer> bookingList = new ArrayList<>() ;
+        flights.getBookings().forEach(booking -> {
+            bookingList.add(booking.getId()) ;
+        });
+
+        flightResponse.setBookings(bookingList);
+
+        return flightResponse;
     }
+
 
 }

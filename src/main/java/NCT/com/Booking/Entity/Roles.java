@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter @Getter
@@ -31,7 +33,7 @@ public class Roles {
             }
 
     )
-    private List<Users> users = new ArrayList<>() ;
+    private Set<Users> users = new HashSet<>() ;
     @ManyToMany(
             fetch =  FetchType.LAZY ,
             cascade = {
@@ -46,7 +48,7 @@ public class Roles {
             joinColumns = @JoinColumn(name = "roleId") ,
             inverseJoinColumns =  @JoinColumn(name = "permissionId")
     )
-    private List<Permission> permissions = new ArrayList<>() ;
+    private Set<Permission> permissions = new HashSet<>() ;
 
     // Synchronizes data
     public void addPermission(Permission permission) {

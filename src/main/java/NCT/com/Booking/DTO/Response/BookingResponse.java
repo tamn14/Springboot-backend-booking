@@ -16,6 +16,6 @@ public class BookingResponse {
     private String seatNumner ;
     private LocalDateTime bookingTime  ;
     private boolean status ;
-    private Integer users  ;
-    private Integer flights ;
+    private int users  ;
+    private int flights ;
 }

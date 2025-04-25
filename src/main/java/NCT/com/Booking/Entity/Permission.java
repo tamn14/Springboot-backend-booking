@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter @Getter
@@ -29,5 +31,5 @@ public class Permission {
                     CascadeType.REFRESH
             }
     )
-    private List<Roles> roles = new ArrayList<>() ;
+    private Set<Roles> roles = new HashSet<>() ;
 }

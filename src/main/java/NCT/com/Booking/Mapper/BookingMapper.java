@@ -1,45 +1,50 @@
 package NCT.com.Booking.Mapper;
 
-import NCT.com.Booking.DTO.Request.BookingRequest;
-import NCT.com.Booking.DTO.Request.UserRequest;
+import NCT.com.Booking.DTO.Request.BookingCreateRequest;
 import NCT.com.Booking.DTO.Response.BookingResponse;
-import NCT.com.Booking.DTO.Response.UserResponse;
 import NCT.com.Booking.Entity.Booking;
 import NCT.com.Booking.Entity.Flights;
 import NCT.com.Booking.Entity.Users;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
+import NCT.com.Booking.DTO.Response.FlightResponse;
+import NCT.com.Booking.DTO.Response.UserResponse;
+import NCT.com.Booking.Repository.FlightRepo;
+import NCT.com.Booking.Repository.UserRepo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface BookingMapper {
-    // Map Entity -> Response
-    @Mapping(source = "users.id", target = "users")
-    @Mapping(source = "flights.id", target = "flights")
-    BookingResponse toBookingResponse(Booking booking);
+@Component
+@RequiredArgsConstructor
+public class BookingMapper {
 
-    // Map Request -> Entity (khi đã có Users & Flights)
-    @Mapping(target = "id", ignore = true)
-    Booking toBooking(BookingRequest request,
-                      @MappingTarget Booking booking);
+    private final UserRepo usersRepository;
+    private final FlightRepo flightsRepository;
 
-    // Hoặc nếu muốn map nhanh bằng id (rất giới hạn)
-    @Mapping(target = "users.id", source = "users")
-    @Mapping(target = "flights.id", source = "flights")
-    Booking mapFromRequestWithIds(BookingRequest request);
+    public Booking toEntity(BookingCreateRequest request) {
+        Booking booking = new Booking();
+        booking.setSeatNumner(request.getSeatNumner());
+        booking.setBookingTime(request.getBookingTime());
+        booking.setStatus(request.isStatus());
 
-    default Users map(Integer id) {
-        if (id == null) return null;
-        Users user = new Users();
-        user.setId(id);
-        return user;
+        // Map ID thành Entity
+        Users user = usersRepository.findById(request.getUsers())
+                .orElseThrow(() -> new RuntimeException("User not found with id " + request.getUsers()));
+        Flights flight = flightsRepository.findById(request.getFlights())
+                .orElseThrow(() -> new RuntimeException("Flight not found with id " + request.getFlights()));
+
+        booking.setUsers(user);
+        booking.setFlights(flight);
+
+        return booking;
     }
 
-    default Flights mapFlights(Integer id) {
-        if (id == null) return null;
-        Flights flight = new Flights();
-        flight.setId(id);
-        return flight;
+    public BookingResponse toDTO(Booking booking) {
+        BookingResponse response = new BookingResponse();
+        response.setId(booking.getId());
+        response.setSeatNumner(booking.getSeatNumner());
+        response.setBookingTime(booking.getBookingTime());
+        response.setStatus(booking.isStatus());
+        response.setUsers(booking.getUsers().getId());
+        response.setFlights(booking.getFlights().getId());
+        return response;
     }
 }

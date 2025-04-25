@@ -12,6 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 public class RoleResponse {
     private String name ;
-    private List<Integer> users  ;
-    private List<Integer> permissions  ;
+    private List<PermissionResponse> permissions  ;
 }

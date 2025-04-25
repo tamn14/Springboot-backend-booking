@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -38,7 +40,7 @@ public class Users {
             joinColumns = @JoinColumn(name = "userId") ,
             inverseJoinColumns =  @JoinColumn(name = "roleId")
     )
-    private List<Roles> roles = new ArrayList<>();
+    private Set<Roles> roles = new HashSet<>() ;
 
     @OneToMany(
             fetch =  FetchType.LAZY ,

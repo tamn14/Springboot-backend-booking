@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ApiResponse<T>{
-    private int code ;
-    private String mess ;
-    private T result ;
+    @Builder.Default
+    private int code = 1000;
+    private String mess;
+    private T result;
 }
