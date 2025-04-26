@@ -22,7 +22,6 @@ public class FlightsMapper {
 
     public Flights toEntityCreate(FlightCreateRequest request) {
         Flights flights = new Flights() ;
-        flights.setId(request.getId());
         flights.setFlightNumber(request.getFlightNumber());
         flights.setAirline(request.getAirline());
         flights.setPrice(request.getPrice());

@@ -30,8 +30,7 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public FlightResponse addFlight(FlightCreateRequest flightRequest) {
         Flights flights = flightsMapper.toEntityCreate(flightRequest);
-        Flights flightExisted = flightRepo.findById(flightRequest.getId())
-                .orElseThrow(() -> new AppException(ErrorCode.Flight_NOT_EXISTED)) ;
+        flights.setId(0);
         flightRepo.save(flights) ;
         return flightsMapper.toDTO(flights) ;
     }

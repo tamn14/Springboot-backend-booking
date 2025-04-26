@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FlightCreateRequest {
-    private int id ;
+
     @NotBlank
     private String fromLocation ;
     @NotBlank

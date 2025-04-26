@@ -6,11 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleResponse {
     private String name ;
-    private List<PermissionResponse> permissions  ;
+    private Set<Integer> users  ;
+    private Set<String> permissions  ;
 }

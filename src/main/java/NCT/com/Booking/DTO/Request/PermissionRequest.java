@@ -1,16 +1,16 @@
-package NCT.com.Booking.DTO.Request;
+ package NCT.com.Booking.DTO.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PermissionRequest {
-
     private String name ;
-    private List<String> roles ;
+    private Set<String> roles;
+
 }

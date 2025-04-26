@@ -11,11 +11,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
-    private int id ;
+
     private String userName ;
     private String passWord ;
     private String lastName ;
     private String firstName ;
-    private Set<RoleResponse> roles  ;
-    private List<BookingResponse> bookings  ;
+    private Set<String> roles  ;
+    private List<Integer> bookings  ;
 }

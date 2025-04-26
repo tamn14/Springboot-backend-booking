@@ -18,4 +18,6 @@ public class UserCreateRequest {
     private String lastName ;
     @NotBlank
     private String firstName ;
+    @NonNull
+    private List<String> roles;
 }

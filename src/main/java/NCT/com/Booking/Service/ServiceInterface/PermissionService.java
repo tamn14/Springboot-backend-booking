@@ -2,8 +2,6 @@ package NCT.com.Booking.Service.ServiceInterface;
 
 import NCT.com.Booking.DTO.Request.PermissionRequest;
 import NCT.com.Booking.DTO.Response.PermissionResponse;
-import NCT.com.Booking.Entity.Permission;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
