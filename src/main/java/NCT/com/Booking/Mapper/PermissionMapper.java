@@ -9,14 +9,17 @@ import NCT.com.Booking.Entity.Roles;
 import NCT.com.Booking.Entity.Users;
 import NCT.com.Booking.Repository.RoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class PermissionMapper {
     @Autowired
     private RoleRepo roleRepo ;
+
     public Permission toEntity(PermissionRequest request) {
         Permission permission = new Permission() ;
         permission.setName(request.getName());

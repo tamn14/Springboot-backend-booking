@@ -97,11 +97,16 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.toDTO(roleUpdate) ;
 
     }
-
+    // khi xoa role se bi loi rang buoc khoa ngoai nhung user lai khong co loi
+    // Do user la ben quan ly nen spring hieu va tu dong xoa lien ket trong bang phu
     @Override
     public void deleteRoles(int id) {
         Roles roles = roleRepo.findById(id)
                 .orElseThrow(()-> new AppException(ErrorCode.ROLE_NOT_EXISTED)) ;
+        roles.getUsers().forEach(users -> {
+            roles.getUsers().remove(users) ;
+            users.getRoles().remove(roles) ;
+        });
         roleRepo.deleteById(id) ;
     }
 

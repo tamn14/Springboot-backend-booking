@@ -26,8 +26,8 @@ public class RoleController {
                 .build() ;
 
     }
-    @GetMapping()
-    public ApiResponse<List<RoleResponse>> getAll(@PathVariable int id) {
+    @GetMapping
+    public ApiResponse<List<RoleResponse>> getAll() {
         List<RoleResponse> roleResponse = roleService.findAll() ;
         return ApiResponse.<List<RoleResponse>>builder()
                 .mess("Success")
@@ -36,8 +36,7 @@ public class RoleController {
 
     }
     @PostMapping("/create")
-    public ApiResponse<RoleResponse> createRole(@Valid @RequestBody RolesCreationRequest rolesCreationRequest
-            , @PathVariable int id) {
+    public ApiResponse<RoleResponse> createRole(@Valid @RequestBody RolesCreationRequest rolesCreationRequest) {
         RoleResponse roleResponse = roleService.addRoles(rolesCreationRequest) ;
         return ApiResponse.<RoleResponse>builder()
                 .mess("Success")
@@ -56,7 +55,7 @@ public class RoleController {
 
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     public ApiResponse<String> deleteRole(@PathVariable int id) {
         roleService.deleteRoles(id);
         return ApiResponse.<String>builder()
@@ -64,5 +63,6 @@ public class RoleController {
                 .result("Role has been deleted")
                 .build() ;
     }
+
 
 }
