@@ -26,7 +26,7 @@ public class UserController {
     }
     @GetMapping("/{id}")
     public ApiResponse<UserResponse> getById(@PathVariable int id) {
-        UserResponse userResponse = userService.findFlightById(id) ;
+        UserResponse userResponse = userService.findUserById(id) ;
         return ApiResponse.<UserResponse>builder()
                 .mess("Success")
                 .result(userResponse)

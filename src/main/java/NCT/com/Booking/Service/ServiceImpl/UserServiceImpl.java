@@ -15,12 +15,19 @@ import NCT.com.Booking.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -103,9 +110,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse findFlightById(int id) {
+    public UserResponse findUserById(int id) {
         Users user = userRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return userMapper.toDTO(user) ;
     }
+
+    @Override
+    public UserResponse findByUserName(String userName) {
+        Users users =  userRepo.findByUserName(userName) ;
+        return userMapper.toDTO(users) ;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Users users = userRepo.findByUserName(username) ;
+        if(users == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED) ;
+        }
+        User user = new User(
+                users.getUserName(),
+                users.getPassWord() ,
+                roleToAuthorities(users.getRoles())
+        ) ;
+        return user ;
+    }
+
+    private Collection<? extends GrantedAuthority> roleToAuthorities (Collection<Roles> roles) {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(
+                        role.getName()
+                )).collect(Collectors.toList());
+    }
+
+
+
+
 }
