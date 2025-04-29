@@ -34,7 +34,7 @@ public class CustomJwtDecode implements JwtDecoder {
             );
             if(!response.isValid()) throw new JwtException("Token invalid") ;
 
-        } catch (JOSEException | ParseException e) {
+        } catch (Exception e) {
             throw new JwtException(e.getMessage());
         }
         if(Objects.isNull(nimbusJwtDecoder)){

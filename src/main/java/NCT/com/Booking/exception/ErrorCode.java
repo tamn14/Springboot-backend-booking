@@ -21,7 +21,9 @@ public enum ErrorCode {
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     Flight_NOT_EXISTED(1009,"Flight not existed" ,  HttpStatus.NOT_FOUND),
-    BOOKING_NOT_FOUND(1010,"Booking not existed" ,HttpStatus.NOT_FOUND );
+    BOOKING_NOT_FOUND(1010,"Booking not existed" ,HttpStatus.NOT_FOUND ),
+    ACCOUNTS_BLOCK(1015,"Account has been block" ,HttpStatus.UNAUTHORIZED ),
+    INVALID_CREDENTIALS(1014,"Username or password not exited" ,HttpStatus.UNAUTHORIZED );
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

@@ -5,7 +5,6 @@ import NCT.com.Booking.DTO.Response.ApiResponse;
 import NCT.com.Booking.DTO.Response.PermissionResponse;
 import NCT.com.Booking.Service.ServiceInterface.PermissionService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/permission")
-public class Controller {
+public class PermissionController {
     @Autowired
     private PermissionService permissionService ;
     @GetMapping
