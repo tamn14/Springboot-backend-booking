@@ -5,6 +5,7 @@ import NCT.com.Booking.DTO.Request.IntrospectRequest;
 import NCT.com.Booking.DTO.Response.ApiResponse;
 import NCT.com.Booking.DTO.Response.AuthenticationResponse;
 import NCT.com.Booking.DTO.Response.InstropectResponse;
+import NCT.com.Booking.Service.ServiceImpl.JwtServiceImpl;
 import NCT.com.Booking.Service.ServiceInterface.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,6 @@ public class AuthenticationController {
                 .result(authenticationResponse)
                 .build() ;
     }
-    @PostMapping("/introspect")
-    ApiResponse<InstropectResponse> authenticate(@RequestBody IntrospectRequest request)
-            throws ParseException, JOSEException {
-        var result = authenticationService.Instropect(request);
-        return ApiResponse.<InstropectResponse>builder().result(result).build();
-    }
+
 
 }

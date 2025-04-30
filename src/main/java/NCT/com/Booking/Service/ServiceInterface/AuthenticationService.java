@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AuthenticationService {
     public AuthenticationResponse authenticate (AuthenticationRequest authenticationRequest)  ;
-    public InstropectResponse Instropect (IntrospectRequest introspectRequest) ;
+//    public InstropectResponse Instropect (IntrospectRequest introspectRequest) ;
 
 
 }

@@ -12,7 +12,7 @@ public class EndPoint {
 //    } ;
     public static final String[] PUBLIC_POST_ENDPOINS = {
             "/auth/login" ,
-            "/auth/instrospect" ,
+            "/jwt/introspect" ,
             "/auth/logout",
             "/auth/refresh"
     };

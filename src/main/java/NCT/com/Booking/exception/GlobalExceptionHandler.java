@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,25 +34,37 @@ public class GlobalExceptionHandler {
         apiResponse.setMess(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
-    // bat loi dang nhap khong dung username hoac mat khau
-    @ExceptionHandler(value = BadCredentialsException.class)
+    // Sai mật khẩu
+    @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResponse> handleBadCredentials(BadCredentialsException ex) {
-        ErrorCode errorCode = ErrorCode.UNAUTHORIZED ;
-        return ResponseEntity.status(errorCode.getStatusCode()) // tuy chinh status code
+        ErrorCode errorCode = ErrorCode.INVALID_CREDENTIALS;
+        return ResponseEntity.status(errorCode.getStatusCode())
                 .body(ApiResponse.builder()
                         .code(errorCode.getCode())
-                        .mess(ErrorCode.INVALID_CREDENTIALS.getMessage())
+                        .mess(errorCode.getMessage())
+                        .build()
+                );
+    }
+
+    // Username không tồn tại
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ResponseEntity<ApiResponse> handleUserNotFound(InternalAuthenticationServiceException ex) {
+        ErrorCode errorCode = ErrorCode.USER_NOT_EXISTED;
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .mess(errorCode.getMessage())
                         .build()
                 );
     }
     // bat loi tai khoan dang bi khoa
     @ExceptionHandler(value = DisabledException.class)
     public ResponseEntity<ApiResponse> handleDisabled(DisabledException ex) {
-        ErrorCode errorCode = ErrorCode.UNAUTHORIZED ;
-        return ResponseEntity.status(errorCode.getStatusCode()) // tuy chinh status code
+        ErrorCode errorCode = ErrorCode.ACCOUNTS_BLOCK ;
+        return ResponseEntity.status(errorCode.getStatusCode())
                 .body(ApiResponse.builder()
                         .code(errorCode.getCode())
-                        .mess(ErrorCode.ACCOUNTS_BLOCK.getMessage())
+                        .mess(errorCode.getMessage())
                         .build()
                 );
     }
@@ -59,7 +72,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException accessDeniedException) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED ;
-        return ResponseEntity.status(errorCode.getStatusCode()) // tuy chinh status code
+        return ResponseEntity.status(errorCode.getStatusCode())
                 .body(ApiResponse.builder()
                         .code(errorCode.getCode())
                         .mess(errorCode.getMessage())

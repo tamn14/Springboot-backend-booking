@@ -1,0 +1,16 @@
+package NCT.com.Booking.Entity;
+
+import jakarta.persistence.Id;
+import lombok.*;
+
+import java.util.Date;
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class InvalidatedToken {
+    @Id
+    private String id ;
+    private Date exoiryTime ;
+}
