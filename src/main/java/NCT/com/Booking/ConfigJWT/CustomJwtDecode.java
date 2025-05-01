@@ -35,9 +35,6 @@ public class CustomJwtDecode implements JwtDecoder {
             var response  = jwtService.Instropect(
                     IntrospectRequest.builder().token(token).build()
             );
-//            System.out.println(" Token is : " + token + "/n");
-//            System.out.println("/n--------------------/n");
-//            System.out.println(response + " xxxxx");
             if(!response.isValid()) throw new JwtException("Token invalid") ;
 
         } catch (Exception e) {

@@ -5,14 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class RolesUpdateRequest {
-    private String name ;
-    private Set<Integer> users  ;
-    private Set<String> permissions  ;
+public class RefreshRequest {
+    private  String token;
 }

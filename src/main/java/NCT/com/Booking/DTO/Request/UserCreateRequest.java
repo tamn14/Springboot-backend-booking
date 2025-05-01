@@ -9,6 +9,7 @@ import java.util.List;
 @Setter @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserCreateRequest {
     @Size(min = 4, message = "USERNAME_INVALID")
     private String userName ;

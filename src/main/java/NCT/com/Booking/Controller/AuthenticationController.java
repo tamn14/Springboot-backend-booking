@@ -2,6 +2,8 @@ package NCT.com.Booking.Controller;
 
 import NCT.com.Booking.DTO.Request.AuthenticationRequest;
 import NCT.com.Booking.DTO.Request.IntrospectRequest;
+import NCT.com.Booking.DTO.Request.LogoutRequest;
+import NCT.com.Booking.DTO.Request.RefreshRequest;
 import NCT.com.Booking.DTO.Response.ApiResponse;
 import NCT.com.Booking.DTO.Response.AuthenticationResponse;
 import NCT.com.Booking.DTO.Response.InstropectResponse;
@@ -27,6 +29,24 @@ public class AuthenticationController {
                 .result(authenticationResponse)
                 .build() ;
     }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(@RequestBody LogoutRequest logoutRequest) {
+        authenticationService.logout(logoutRequest);
+        return ApiResponse.<Void>builder()
+                .mess("Success")
+                .build() ;
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest refreshRequest) throws ParseException, JOSEException {
+        AuthenticationResponse authenticationResponse =  authenticationService.Refresh(refreshRequest);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .mess("Success")
+                .result(authenticationResponse)
+                .build() ;
+    }
+
 
 
 }

@@ -9,9 +9,8 @@ import java.text.ParseException;
 
 public interface JwtService {
     String generateToken(Users users) ;
-    SignedJWT verifyToken(String token) ;
+    SignedJWT verifyToken(String token , boolean isRefress) ;
     String buildScope(Users user) ;
-    String getUserNameFromToken(String token) ;
-    boolean isTokenExpired(SignedJWT signedJWT) throws ParseException;
+    boolean isTokenExpired(SignedJWT signedJWT , boolean isRefress) throws ParseException;
     InstropectResponse Instropect(IntrospectRequest introspectRequest) ;
 }

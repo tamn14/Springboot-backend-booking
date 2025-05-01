@@ -1,5 +1,6 @@
 package NCT.com.Booking.Entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -9,8 +10,9 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class InvalidatedToken {
     @Id
     private String id ;
-    private Date exoiryTime ;
+    private Date expiryTime ;
 }
