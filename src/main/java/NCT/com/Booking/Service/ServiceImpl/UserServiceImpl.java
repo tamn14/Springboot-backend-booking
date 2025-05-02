@@ -15,6 +15,9 @@ import NCT.com.Booking.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,18 +38,24 @@ public class UserServiceImpl implements UserService {
     private UserRepo userRepo;
     private RoleRepo roleRepo;
     private UserMapper userMapper;
-
+    private PasswordEncoder passwordEncoder ;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, RoleRepo roleRepo, UserMapper userMapper) {
+    public UserServiceImpl(UserRepo userRepo, RoleRepo roleRepo, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse addUsers(UserCreateRequest userRequest) {
         Users users = userMapper.toEntity(userRequest);
+        if(userRepo.existsByUserName(users.getUserName())) {
+            throw new AppException(ErrorCode.USER_EXISTED) ;
+        }
+        users.setPassWord(passwordEncoder.encode(userRequest.getPassWord()));
         if (!userRequest.getRoles().isEmpty()) {
             userRequest.getRoles().forEach(role -> {
                 Roles rolesExisted = roleRepo.findByName(role);
@@ -58,19 +67,17 @@ public class UserServiceImpl implements UserService {
                 rolesExisted.getUsers().add(users);
             });
         }
+        userRepo.saveAndFlush(users) ;
         return userMapper.toDTO(users);
 
 
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse updateUsers(UsersUpdateRequest userRequest, int id) {
         Users userUpdate = userRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        userUpdate.setLastName(userRequest.getLastName());
-        userUpdate.setFirstName(userRequest.getFirstName());
-        userUpdate.setUserName(userRequest.getUserName());
-        userUpdate.setPassWord(userRequest.getPassWord());
         Set<Roles> roles = new HashSet<>();
         if (!userRequest.getRoles().isEmpty()) {
             userRequest.getRoles().forEach(role -> {
@@ -81,10 +88,11 @@ public class UserServiceImpl implements UserService {
                 roles.add(rolesExisted);
             });
             // xoa moi quan he giua role va userUpdate de cap nhat role moi
-            userUpdate.getRoles().forEach( roleOld -> {
+            Set<Roles> oldRoles = new HashSet<>(userUpdate.getRoles());
+            for (Roles roleOld : oldRoles) {
                 userUpdate.getRoles().remove(roleOld);
-                roleOld.getUsers().remove(userUpdate) ;
-            });
+                roleOld.getUsers().remove(userUpdate);
+            }
             // cap nhat role moi cho userUpdate
             roles.forEach(roleNew -> {
                 userUpdate.getRoles().add(roleNew);
@@ -96,6 +104,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUsers(int id) {
         Users user = userRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -119,6 +128,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findByUserName(String userName) {
         Users users =  userRepo.findByUserName(userName) ;
+        if(users == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
         return userMapper.toDTO(users) ;
     }
 
@@ -143,7 +155,30 @@ public class UserServiceImpl implements UserService {
                 )).collect(Collectors.toList());
     }
 
+    @Override
+    public UserResponse getMyInfor() {
+        var context = SecurityContextHolder.getContext() ;
+        String name = context.getAuthentication().getName() ;
+        Users user = userRepo.findByUserName(name) ;
+        if(user == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED) ;
+        }
+        return userMapper.toDTO(user) ;
+    }
 
-
-
+    @Override
+    @PostAuthorize("returnObject.userName == authentication.name")
+    public UserResponse UpdateMyUser(UsersUpdateRequest userRequest, int id) {
+        var context = SecurityContextHolder.getContext() ;
+        String name = context.getAuthentication().getName() ;
+        Users userUpdate = userRepo.findByUserName(name) ;
+        if(userUpdate == null) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED) ;
+        }
+        userUpdate.setLastName(userRequest.getLastName());
+        userUpdate.setFirstName(userRequest.getFirstName());
+        userUpdate.setPassWord(passwordEncoder.encode(userRequest.getPassWord()));
+        userRepo.saveAndFlush(userUpdate) ;
+        return userMapper.toDTO(userUpdate) ;
+    }
 }

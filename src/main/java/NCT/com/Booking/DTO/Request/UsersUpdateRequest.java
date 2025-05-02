@@ -14,8 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UsersUpdateRequest {
-    @Size(min = 4, message = "USERNAME_INVALID")
-    private String userName ;
+
     @Size(min = 6, message = "INVALID_PASSWORD")
     private String passWord ;
     @NotBlank

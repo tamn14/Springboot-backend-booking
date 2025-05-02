@@ -14,5 +14,6 @@ public interface UserService extends UserDetailsService {
     public List<UserResponse> findAll() ;
     public UserResponse findUserById(int id) ;
     public UserResponse findByUserName(String UserName) ;
-
+    public UserResponse getMyInfor() ;
+    public UserResponse UpdateMyUser(UsersUpdateRequest userRequest , int id) ;
 }

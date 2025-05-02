@@ -11,6 +11,7 @@ import NCT.com.Booking.exception.AppException;
 import NCT.com.Booking.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public FlightResponse addFlight(FlightCreateRequest flightRequest) {
         Flights flights = flightsMapper.toEntityCreate(flightRequest);
         flights.setId(0);
@@ -36,6 +38,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public FlightResponse updateFlight(FlightUpdateRequest flightRequest , int id) {
         Flights flights = flightRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.Flight_NOT_EXISTED)) ;
@@ -51,6 +54,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteFlight(int id) {
         Flights flights = flightRepo.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.Flight_NOT_EXISTED)) ;

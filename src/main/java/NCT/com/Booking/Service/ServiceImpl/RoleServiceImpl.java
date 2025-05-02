@@ -15,6 +15,7 @@ import NCT.com.Booking.exception.AppException;
 import NCT.com.Booking.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -37,6 +38,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse addRoles(RolesCreationRequest roleRequest) {
         Roles roles = roleMapper.toEntity(roleRequest) ;
         if(roleRepo.findByName(roleRequest.getName()) != null) {
@@ -48,6 +50,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse updateRoles(RolesUpdateRequest roleRequest, int id) {
         Roles roleUpdate = roleRepo.findById(id)
                 .orElseThrow(()-> new AppException(ErrorCode.ROLE_NOT_EXISTED)) ;
@@ -100,6 +103,7 @@ public class RoleServiceImpl implements RoleService {
     // khi xoa role se bi loi rang buoc khoa ngoai nhung user lai khong co loi
     // Do user la ben quan ly nen spring hieu va tu dong xoa lien ket trong bang phu
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteRoles(int id) {
         Roles roles = roleRepo.findById(id)
                 .orElseThrow(()-> new AppException(ErrorCode.ROLE_NOT_EXISTED)) ;

@@ -12,6 +12,7 @@ import NCT.com.Booking.exception.AppException;
 import NCT.com.Booking.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -34,6 +35,7 @@ public class PermissionServiceImpl implements PermissionService {
 
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse addPermission(PermissionRequest permissionRequest) {
         Permission permissionCreation = permissionMapper.toEntity(permissionRequest) ;
         if(permissionRepo.findByName(permissionRequest.getName()) != null) {
@@ -54,6 +56,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse updatePermission(PermissionRequest permissionRequest , int id ) {
         Permission permissionUpdate = permissionRepo.findById(id)
                 .orElseThrow(()-> new AppException(ErrorCode.PERMISSION_NOT_EXISTED)) ;
@@ -62,17 +65,16 @@ public class PermissionServiceImpl implements PermissionService {
         if(!permissionRequest.getRoles().isEmpty()) {
             permissionRequest.getRoles().forEach(role -> {
                 Roles rolesExisted = roleRepo.findByName(role) ;
-                if(roles == null) {
-                    throw new AppException(ErrorCode.PERMISSION_NOT_EXISTED) ;
+                if(rolesExisted == null) {
+                    throw new AppException(ErrorCode.ROLE_NOT_EXISTED) ;
                 }
                 roles.add(rolesExisted) ;
             });
-
-            permissionUpdate.getRoles().forEach(roleOld -> {
-                permissionUpdate.getRoles().remove(roleOld) ;
-                roleOld.getPermissions().remove(permissionUpdate) ;
-
-            });
+            Set<Roles> oldRoles = new HashSet<>(permissionUpdate.getRoles());
+            for (Roles roleOld : oldRoles) {
+                permissionUpdate.getRoles().remove(roleOld);
+                roleOld.getPermissions().remove(permissionUpdate);
+            }
             roles.forEach(roleNew -> {
                 permissionUpdate.getRoles().add(roleNew) ;
                 roleNew.getPermissions().add(permissionUpdate) ;
@@ -87,13 +89,15 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deletePermission(int id) {
         Permission permission = permissionRepo.findById(id)
                 .orElseThrow(()-> new AppException(ErrorCode.PERMISSION_NOT_EXISTED)) ;
-        permission.getRoles().forEach(roles -> {
-             permission.getRoles().remove(roles) ;
-             roles.getPermissions().remove(permission) ;
-        });
+        Set<Roles> rolesToRemove = new HashSet<>(permission.getRoles());
+        for (Roles role : rolesToRemove) {
+            role.getPermissions().remove(permission);
+        }
+        permission.getRoles().clear();
         permissionRepo.deleteById(id);
 
     }

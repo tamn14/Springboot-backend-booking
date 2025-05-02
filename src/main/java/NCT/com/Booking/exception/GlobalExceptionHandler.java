@@ -27,11 +27,13 @@ public class GlobalExceptionHandler {
     }
     // Exception bat cac loi co the bi bo xot
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse> handlingRuntimeException (RuntimeException runtimeException) {
-        log.error("Exception : " , runtimeException);
-        ApiResponse apiResponse = new ApiResponse() ;
+    ResponseEntity<ApiResponse> handlingRuntimeException(Exception exception) {
+        log.error("Exception: ", exception);
+        ApiResponse apiResponse = new ApiResponse();
+
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         apiResponse.setMess(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+
         return ResponseEntity.badRequest().body(apiResponse);
     }
     // Sai mật khẩu

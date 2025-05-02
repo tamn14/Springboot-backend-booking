@@ -32,6 +32,17 @@ public class UserController {
                 .result(userResponse)
                 .build() ;
     }
+
+    @GetMapping("/myInfo")
+    public ApiResponse<UserResponse> getMyInfo() {
+        UserResponse userResponse = userService.getMyInfor() ;
+        return ApiResponse.<UserResponse>builder()
+                .mess("Success")
+                .result(userResponse)
+                .build() ;
+    }
+
+
     @PostMapping("/create")
     public ApiResponse<UserResponse> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         UserResponse userResponse = userService.addUsers(userCreateRequest) ;
@@ -49,6 +60,16 @@ public class UserController {
                 .result(userResponse)
                 .build() ;
     }
+
+    @PutMapping("/updateMyInfo/{id}")
+    public ApiResponse<UserResponse> updateMyInfo(@RequestBody UsersUpdateRequest usersUpdateRequest
+            ,@PathVariable("id") int id) {
+        UserResponse userResponse = userService.UpdateMyUser(usersUpdateRequest , id) ;
+        return ApiResponse.<UserResponse>builder()
+                .mess("Success")
+                .result(userResponse)
+                .build() ;
+    }
     @DeleteMapping("/delete/{id}")
     public ApiResponse<String> deleteUser(@PathVariable int id) {
        userService.deleteUsers(id); ;
@@ -57,6 +78,8 @@ public class UserController {
                 .result("User has been deteled")
                 .build() ;
     }
+
+
 
 
 }

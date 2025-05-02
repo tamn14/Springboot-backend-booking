@@ -1,6 +1,7 @@
 package NCT.com.Booking.Sercurity;
 
 import NCT.com.Booking.ConfigJWT.CustomJwtDecode;
+import NCT.com.Booking.ConfigJWT.JwtAuthenticationEntryPoint;
 import NCT.com.Booking.Service.ServiceInterface.AuthenticationService;
 import NCT.com.Booking.Service.ServiceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
     @Autowired
-    private CustomJwtDecode customJwtDecode ;
+    private CustomJwtDecode customJwtDecode;
 
 
     // khai bao Bean passoword encoder
@@ -29,29 +30,31 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
+
     // Khai bao DaoAuthenticationProvider de spring biet
     @Bean
     public DaoAuthenticationProvider authenticationProvider(UserService userService) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider() ;
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return daoAuthenticationProvider ;
+        return daoAuthenticationProvider;
     }
+
     // Chuyen doi thong tin trong JWT ( role, permission) thanh GrantedAuthority
     // Dieu nay giup spring security biet user dang dang nhap co quyen gi
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter() ;
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter() ;
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        return jwtAuthenticationConverter ;
+        return jwtAuthenticationConverter;
 
     }
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager() ;
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -64,14 +67,14 @@ public class SecurityConfig {
 
         // cau hinh OAuth2 Resource Server su dung JWT
         // Muc dich cua viec nay la tu dong xac thuc cac endpoint co quyen gi
-        httpSecurity.oauth2ResourceServer(oauth2->oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                .decoder(customJwtDecode)
-                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-        )) ;
+        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
+                        .decoder(customJwtDecode)
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+        );
         // Tắt CSRF vì chúng ta không cần khi làm việc với REST API
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
-
     }
 
 }

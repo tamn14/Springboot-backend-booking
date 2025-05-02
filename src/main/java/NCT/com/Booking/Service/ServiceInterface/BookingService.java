@@ -12,4 +12,5 @@ public interface BookingService {
     public void deleteBooking(int id) ;
     public List<BookingResponse> findAll() ;
     public BookingResponse findBookingById(int id) ;
+    public List<BookingResponse> getMyBooking() ;
 }

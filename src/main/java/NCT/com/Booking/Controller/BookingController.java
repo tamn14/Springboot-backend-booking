@@ -34,6 +34,15 @@ public class BookingController {
                 .build() ;
     }
 
+    @GetMapping("/myBooking")
+    public ApiResponse<List<BookingResponse>> getMyBooking() {
+        List<BookingResponse>booking = bookingService.getMyBooking() ;
+        return ApiResponse.<List<BookingResponse>>builder()
+                .mess("Success")
+                .result(booking)
+                .build() ;
+    }
+
     @PostMapping
     public ApiResponse<BookingResponse> addBooking(@RequestBody @Valid  BookingCreateRequest bookingCreateRequest) {
         BookingResponse bookingResponse = bookingService.addBooking(bookingCreateRequest) ;
