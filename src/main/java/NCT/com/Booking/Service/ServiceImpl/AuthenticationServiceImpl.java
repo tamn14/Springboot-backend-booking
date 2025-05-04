@@ -60,8 +60,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
 
-
-
     @NonFinal
     @Value("${outbound.identity.client-id}")
     protected String CLIENT_ID;

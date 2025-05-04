@@ -20,7 +20,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.6.3</org.mapstruct.version>
-		<spring-cloud.version>2023.0.1</spring-cloud.version>
+		<spring-cloud.version>2024.0.1</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -113,7 +113,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>2023.0.1</version> <!-- Hoặc version tương thích -->
+				<version>2024.0.1</version> <!-- Giữ nguyên hoặc kiểm tra lại version tương thích -->
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
