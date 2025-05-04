@@ -1,6 +1,7 @@
 package NCT.com.Booking.Controller;
 
 import NCT.com.Booking.DTO.Request.UserCreateRequest;
+import NCT.com.Booking.DTO.Request.UsersUpdateRequest;
 import NCT.com.Booking.DTO.Response.UserResponse;
 import NCT.com.Booking.Service.ServiceInterface.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,11 +38,12 @@ public class UserControllerTest {
 
     private UserCreateRequest userCreateRequest ;
     private UserResponse userResponse ;
+    private UsersUpdateRequest usersUpdateRequest ;
 
     @BeforeEach
     public void initData () {
-        List<String> roles = List.of("User") ;
-        Set<String> Setroles = Set.of("User") ;
+        Set<String> roles = Set.of("User") ;
+        Set<String> roleUpdate = Set.of("User", "Admin") ;
         userCreateRequest = UserCreateRequest.builder()
                .firstName("Tam")
                .lastName("Nguyen Chi")
@@ -50,20 +52,27 @@ public class UserControllerTest {
                .roles(roles)
                .build() ;
 
+        usersUpdateRequest = UsersUpdateRequest.builder()
+                .firstName("Tien")
+                .lastName("Nguyen Thi Kieu")
+                .passWord("123456")
+                .roles(roleUpdate)
+                .build() ;
+
         userResponse = UserResponse.builder()
                 .firstName("Tam")
                 .lastName("Nguyen Chi")
                 .userName("Tam123")
-                .roles(Setroles)
+                .roles(roles)
                 .build();
     }
 
 
     @Test
     @WithMockUser(username = "Tam123", roles = {"USER"})
-    //
     void createUser_validRequest_success() throws Exception {
         // Given
+
         ObjectMapper objectMapper = new ObjectMapper() ;
         String content = objectMapper.writeValueAsString(userCreateRequest) ;
 
@@ -79,6 +88,59 @@ public class UserControllerTest {
                         .value(1000)
         ) ;
     }
+
+    @Test
+    @WithMockUser(username = "Tam123", roles = {"USER"})
+    void createUser_validRequest_fail() throws Exception {
+        // Given
+        userCreateRequest.setUserName("tam");
+        ObjectMapper objectMapper = new ObjectMapper() ;
+        String content = objectMapper.writeValueAsString(userCreateRequest) ;
+
+        // When , Then
+        mockMvc.perform(MockMvcRequestBuilders.
+                        post("/user/create")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("code")
+                        .value(1003))
+                .andExpect(MockMvcResultMatchers.jsonPath("mess")
+                        .value("Username must be at least 4 characters"));;
+    }
+    @Test
+    @WithMockUser(username = "Huong123", roles = {"USER" ,"ADMIN"})
+    void updateUser_validRequest_success() throws Exception {
+        // Given
+
+        ObjectMapper objectMapper = new ObjectMapper() ;
+        String content = objectMapper.writeValueAsString(usersUpdateRequest) ;
+
+        Mockito.when(userService.addUsers(ArgumentMatchers.any(UserCreateRequest.class)))
+                .thenReturn(userResponse);
+        // When , Then
+        mockMvc.perform(MockMvcRequestBuilders.
+                        put("/user/update/5")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("code")
+                        .value(1000)
+                ) ;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @TestConfiguration

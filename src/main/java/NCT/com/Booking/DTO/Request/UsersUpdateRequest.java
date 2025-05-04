@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +22,8 @@ public class UsersUpdateRequest {
     private String lastName ;
     @NotBlank
     private String firstName ;
-    private List<String> roles;
+    @NotBlank
+    private String email ;
+    private Set<String> roles;
 
 }

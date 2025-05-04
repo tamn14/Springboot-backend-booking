@@ -28,26 +28,5 @@ public class UserServiceTest {
 
     @BeforeEach
     public void initData () {
-        List<String> roles = List.of("User") ;
-        Set<String> Setroles = Set.of("User") ;
-        userCreateRequest = UserCreateRequest.builder()
-                .firstName("Tam")
-                .lastName("Nguyen Chi")
-                .userName("Tam123")
-                .passWord("123456")
-                .roles(roles)
-                .build() ;
-
-        userResponse = UserResponse.builder()
-                .firstName("Tam")
-                .lastName("Nguyen Chi")
-                .userName("Tam123")
-                .roles(Setroles)
-                .build();
-    }
-
-    @Test
-    void CreateUser_validRequest_success() {
-        //given
     }
 }

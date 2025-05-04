@@ -18,6 +18,7 @@ public class UserResponse {
     private String passWord ;
     private String lastName ;
     private String firstName ;
+    private String email ;
     private Set<String> roles  ;
     private List<Integer> bookings  ;
 }

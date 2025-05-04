@@ -30,6 +30,7 @@ public class UserMapper {
         users.setFirstName(request.getFirstName());
         users.setUserName(request.getUserName());
         users.setPassWord(request.getPassWord());
+        users.setEmail(request.getEmail()) ;
 
         Set<Roles> roleEntities = new HashSet<>();
         if (request.getRoles() != null) {
@@ -52,7 +53,7 @@ public class UserMapper {
         response.setFirstName(users.getFirstName());
         response.setUserName(users.getUserName());
         response.setPassWord(users.getPassWord());
-
+        response.setEmail(users.getEmail());
         Set<String> roleNames = users.getRoles().stream()
                 .map(Roles::getName)
                 .collect(Collectors.toSet());

@@ -18,5 +18,6 @@ public interface AuthenticationService {
     public AuthenticationResponse authenticate (AuthenticationRequest authenticationRequest)  ;
     public void logout(LogoutRequest logoutRequest) ;
     public AuthenticationResponse Refresh(RefreshRequest refreshRequest) throws ParseException, JOSEException;
+    public AuthenticationResponse authenticateOAuth2 (String code)  ;
 
 }

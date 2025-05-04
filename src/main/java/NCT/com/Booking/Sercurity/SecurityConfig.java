@@ -2,8 +2,8 @@ package NCT.com.Booking.Sercurity;
 
 import NCT.com.Booking.ConfigJWT.CustomJwtDecode;
 import NCT.com.Booking.ConfigJWT.JwtAuthenticationEntryPoint;
-import NCT.com.Booking.Service.ServiceInterface.AuthenticationService;
 import NCT.com.Booking.Service.ServiceInterface.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 public class SecurityConfig {
@@ -30,6 +31,8 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
+
+
 
     // Khai bao DaoAuthenticationProvider de spring biet
     @Bean
@@ -72,6 +75,7 @@ public class SecurityConfig {
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
+
         // Tắt CSRF vì chúng ta không cần khi làm việc với REST API
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();

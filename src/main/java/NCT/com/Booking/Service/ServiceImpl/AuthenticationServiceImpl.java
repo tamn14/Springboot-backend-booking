@@ -1,14 +1,16 @@
 package NCT.com.Booking.Service.ServiceImpl;
 
-import NCT.com.Booking.DTO.Request.AuthenticationRequest;
-import NCT.com.Booking.DTO.Request.LogoutRequest;
-import NCT.com.Booking.DTO.Request.RefreshRequest;
+import NCT.com.Booking.DTO.Request.*;
 import NCT.com.Booking.DTO.Response.AuthenticationResponse;
 
+import NCT.com.Booking.DTO.Response.ExchangeTokenResponse;
+import NCT.com.Booking.DTO.Response.UserInfoOauth2;
 import NCT.com.Booking.Entity.InvalidatedToken;
+import NCT.com.Booking.Entity.Roles;
 import NCT.com.Booking.Entity.Users;
 import NCT.com.Booking.Mapper.UserMapper;
 import NCT.com.Booking.Repository.InvalidateTokenRepo;
+import NCT.com.Booking.Repository.OutboundIdentityClient;
 import NCT.com.Booking.Repository.UserRepo;
 import NCT.com.Booking.Service.ServiceInterface.AuthenticationService;
 import NCT.com.Booking.Service.ServiceInterface.JwtService;
@@ -26,8 +28,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.Role;
 import java.text.ParseException;
-import java.util.Date;
+import java.util.*;
 
 
 @Slf4j
@@ -39,18 +42,41 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private AuthenticationManager authenticationManager;
     private JwtService jwtService ;
     private InvalidateTokenRepo invalidateTokenRepo ;
+    private OutboundIdentityClient outboundIdentityClient ;
     @Autowired
     public AuthenticationServiceImpl(UserRepo userRepo
             , UserMapper userMapper
             , AuthenticationManager authenticationManager
             , JwtService jwtService
-            , InvalidateTokenRepo invalidateTokenRepo) {
+            , InvalidateTokenRepo invalidateTokenRepo
+            , OutboundIdentityClient outboundIdentityClient)
+    {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.invalidateTokenRepo = invalidateTokenRepo;
+        this.outboundIdentityClient = outboundIdentityClient;
     }
+
+
+
+
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String REDIRECT_URI;
+
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
+
 
 
 
@@ -109,5 +135,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (AppException | ParseException exception) {
             log.info("Token already expired") ;
         }
+    }
+
+    @Override
+    public AuthenticationResponse authenticateOAuth2(String code) {
+        Map<String, String> formParams = new HashMap<>();
+        formParams.put("code", code);
+        formParams.put("client_id", CLIENT_ID);
+        formParams.put("client_secret", CLIENT_SECRET);
+        formParams.put("redirect_uri", REDIRECT_URI);
+        formParams.put("grant_type", GRANT_TYPE);
+
+        ExchangeTokenResponse response = outboundIdentityClient.exchangeTokenResponse(formParams);
+        String accessToken = response.getAccessToken();
+
+        var userInfo = outboundIdentityClient.userInfoOauth2("Bearer " + accessToken);
+        String email = userInfo.getEmail() ;
+        if(!userRepo.existsByUserName(email)) {
+            Users userCreateRequest = new Users() ;
+            userCreateRequest.setUserName(email);
+            userCreateRequest.setEmail(email);
+            Roles roles = new Roles() ;
+            roles.setName("User");
+            userCreateRequest.getRoles().add(roles);
+            userRepo.saveAndFlush(userCreateRequest) ;
+
+        }
+        Users users = userRepo.findByUserName(email) ;
+        String token = jwtService.generateToken(users) ;
+
+        return  AuthenticationResponse.builder()
+                .token(token)
+                .build();
     }
 }

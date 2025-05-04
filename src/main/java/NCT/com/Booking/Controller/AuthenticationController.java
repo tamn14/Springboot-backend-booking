@@ -30,6 +30,14 @@ public class AuthenticationController {
                 .build() ;
     }
 
+    @PostMapping("/outbound/authentication")
+    ApiResponse<AuthenticationResponse> outboundAuthenticate(
+            @RequestParam("code") String code
+    ){
+        var result = authenticationService.authenticateOAuth2(code);
+        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
+    }
+
     @PostMapping("/logout")
     public ApiResponse<Void> logout(@RequestBody LogoutRequest logoutRequest) {
         authenticationService.logout(logoutRequest);

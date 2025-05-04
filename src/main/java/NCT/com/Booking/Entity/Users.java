@@ -26,6 +26,8 @@ public class Users {
     private String lastName ;
     @Column(name = "firstname")
     private String firstName ;
+    @Column(name = "email")
+    private String email ;
     @ManyToMany(
             fetch =  FetchType.LAZY ,
             cascade = {

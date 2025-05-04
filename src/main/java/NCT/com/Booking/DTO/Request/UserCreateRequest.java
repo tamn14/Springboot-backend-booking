@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Setter @Getter
 @AllArgsConstructor
@@ -15,10 +16,12 @@ public class UserCreateRequest {
     private String userName ;
     @Size(min = 6, message = "INVALID_PASSWORD")
     private String passWord ;
-    @NotBlank
+
     private String lastName ;
-    @NotBlank
+
     private String firstName ;
+
+    private String email ;
     @NonNull
-    private List<String> roles;
+    private Set<String> roles;
 }
