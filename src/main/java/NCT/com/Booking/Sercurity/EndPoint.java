@@ -16,6 +16,8 @@ public class EndPoint {
             "/auth/logout",
             "/auth/refresh"
     };
+    public static final String front_end_host = "http://localhost:5173" ;
+
 
 //    public static final String[] ADMIN_GET_ENDPOINS = {
 //            "/flight" ,

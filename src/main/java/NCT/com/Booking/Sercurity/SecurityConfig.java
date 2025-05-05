@@ -3,7 +3,6 @@ package NCT.com.Booking.Sercurity;
 import NCT.com.Booking.ConfigJWT.CustomJwtDecode;
 import NCT.com.Booking.ConfigJWT.JwtAuthenticationEntryPoint;
 import NCT.com.Booking.Service.ServiceInterface.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig {
@@ -75,7 +76,16 @@ public class SecurityConfig {
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
-
+        // cau hinh cors han che truy cap tu frontend
+        httpSecurity.cors(cors -> {
+            cors.configurationSource(request -> {
+                CorsConfiguration corsConfig = new CorsConfiguration();
+                corsConfig.addAllowedOrigin(EndPoint.front_end_host);
+                corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                corsConfig.addAllowedHeader("*");
+                return corsConfig;
+            });
+        });
         // Tắt CSRF vì chúng ta không cần khi làm việc với REST API
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
